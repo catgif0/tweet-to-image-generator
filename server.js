@@ -1,47 +1,60 @@
 const express = require('express');
 const puppeteer = require('puppeteer');
-const axios = require('axios');
+const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
+require('dotenv').config();
 
 const app = express();
-const PORT = 8081;
+app.use(bodyParser.json());
 
-// Middleware to parse JSON bodies
-app.use(express.json());
+// Imgur client ID from environment variables
+const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID;
 
 app.post('/generate-image', async (req, res) => {
-  const tweetText = req.body.tweetText || "Default tweet text";
-  
-  // Start Puppeteer
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  
-  // Load HTML template
-  const template = fs.readFileSync(path.join(__dirname, 'templates', 'tweet.html'), 'utf8');
-  
-  // Inject tweet text
-  const htmlContent = template.replace('{{tweetText}}', tweetText);
-  await page.setContent(htmlContent);
-  
-  // Generate screenshot
-  const screenshotBuffer = await page.screenshot({ fullPage: true });
-  await browser.close();
-  
-  // Upload to Imgur
-  const imgurResponse = await axios.post('https://api.imgur.com/3/image', screenshotBuffer, {
-    headers: {
-      Authorization: 'Client-ID e272492b3b91c8c' // Replace with your Imgur Client ID
-    }
-  });
+  const { tweet_text } = req.body;
 
-  if (imgurResponse.data.success) {
-    res.json({ imageUrl: imgurResponse.data.data.link });
-  } else {
-    res.status(500).json({ error: 'Failed to upload image to Imgur' });
+  if (!tweet_text) {
+    return res.status(400).send('Missing tweet_text parameter.');
+  }
+
+  try {
+    // Launch Puppeteer to generate an image
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    
+    await page.setContent(`
+      <html>
+        <body>
+          <div style="font-size: 24px; font-family: Arial, sans-serif;">${tweet_text}</div>
+        </body>
+      </html>
+    `);
+    
+    const imagePath = path.join(__dirname, 'tweet-image.png');
+    await page.screenshot({ path: imagePath });
+    await browser.close();
+
+    // Upload to Imgur
+    const image = fs.createReadStream(imagePath);
+    const response = await axios.post('https://api.imgur.com/3/image', image, {
+      headers: {
+        'Authorization': `Client-ID ${IMGUR_CLIENT_ID}`,
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+
+    const imgurUrl = response.data.data.link;
+    res.json({ imgurUrl });
+
+  } catch (error) {
+    console.error('Error generating image:', error);
+    res.status(500).send('Error generating image');
   }
 });
 
+const PORT = 8081;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
