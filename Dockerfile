@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy the font file into the appropriate directory in the container
-COPY bot/font/arial.ttf /usr/share/fonts/truetype/arial.ttf
+COPY font/arial.ttf /usr/share/fonts/truetype/arial.ttf
 
 # Ensure the logging directory exists
 RUN mkdir -p /var/log && chmod -R 777 /var/log
@@ -29,4 +29,4 @@ EXPOSE 6379
 EXPOSE 8081
 
 # Run Redis, Celery worker, and Flask app using supervisor
-CMD ["/usr/local/bin/supervisord", "-c", "/usr/src/app/supervisord.conf"]
+CMD ["/usr/bin/supervisord", "-c", "/usr/src/app/supervisord.conf"]
