@@ -1,3 +1,9 @@
+# Node.js specific ignores
+node_modules/
+npm-debug.log
+yarn-error.log
+.env
+
 # Python specific ignores
 __pycache__/
 *.py[cod]
@@ -21,45 +27,12 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-*.manifest
-*.spec
-pip-log.txt
-pip-delete-this-directory.txt
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-cover/
-*.mo
-*.pot
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
+
+# Flask stuff
 instance/
 .webassets-cache
-.scrapy
-docs/_build/
-.pybuilder/
-target/
-.ipynb_checkpoints
-profile_default/
-ipython_config.py
-.pdm.toml
-.pdm-python
-.pdm-build/
-__pypackages__/
-celerybeat-schedule
-celerybeat.pid
-*.sage.py
+
+# Environments
 .env
 .venv
 env/
@@ -67,55 +40,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-.spyderproject
-.spyproject
-.ropeproject
-/site
-.mypy_cache/
-.dmypy.json
-dmypy.json
-.pyre/
-.pytype/
-cython_debug/
 
-# Node.js specific ignores
-node_modules/
-npm-debug.log
-yarn-error.log
-yarn-debug.log*
-yarn.lock
-pids/
-*.pid
-*.seed
-*.pid.lock
-lib-cov/
-*.tgz
-*.log
-logs
-*.npm
-.cache/
-.npm/
+# Miscellaneous
 .DS_Store
-.idea/
-.vscode/
-.env.local
-.env.*.local
-output/
-.temp/
-.tmp/
-.cache/
-build/
-dist/
-output/
-coverage/
-node_modules/
-.jest/
-serverless
-.nuxt/
-.next/
-.svelte-kit/
-.eslintcache
-.pnp.*
-
-# Puppeteer specific ignores
-.screenshots/
+Thumbs.db
