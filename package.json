@@ -1,0 +1,14 @@
+{
+  "name": "tweet-to-image",
+  "version": "1.0.0",
+  "description": "Generate images from tweet data",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "puppeteer": "^19.7.5",
+    "axios": "^1.6.3"
+  }
+}
